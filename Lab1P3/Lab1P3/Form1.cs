@@ -47,15 +47,36 @@ namespace Lab1P3
 
         private void panel1_MouseDown(object sender, MouseEventArgs e)
         {
-            if (!_mouseButtonIsPressed)
+            if (e.Button == MouseButtons.Left)
             {
-                _mouseDownLocation = e.Location;
-                _rectangleMouseDownLocation = _rectangle.Location;
-                if (_rectangle.Contains(e.Location))
-                    _lastClickedItemIsRectangle = true;
+                if (!_mouseButtonIsPressed)
+                {
+                    _mouseDownLocation = e.Location;
+                    _rectangleMouseDownLocation = _rectangle.Location;
+                    if (_rectangle.Contains(e.Location))
+                        _lastClickedItemIsRectangle = true;
+                }
+
+                _mouseButtonIsPressed = true;
             }
 
-            _mouseButtonIsPressed = true;
+
+            switch (e.Button)
+            {
+                case MouseButtons.Left:
+                    if (!_mouseButtonIsPressed)
+                    {
+                        _mouseDownLocation = e.Location;
+                        _rectangleMouseDownLocation = _rectangle.Location;
+                        if (_rectangle.Contains(e.Location))
+                            _lastClickedItemIsRectangle = true;
+                    }
+
+                    _mouseButtonIsPressed = true;
+                    break;
+                case MouseButtons.Right:
+                    break;
+            }
         }
 
         private void panel1_MouseUp(object sender, MouseEventArgs e)
