@@ -1,5 +1,6 @@
 using Lab1P3.Enums;
 using System.Diagnostics;
+using System.Drawing.Drawing2D;
 
 namespace Lab1P3
 {
@@ -10,6 +11,10 @@ namespace Lab1P3
         private Point _rectangleMouseDownLocation;
         private bool _lastClickedItemIsRectangle = false;
         private bool _mouseButtonIsPressed = false;
+        private Color _rectangleBorderColor = Color.Black;
+        private int _rectangelBorderThickness = 3;
+        private Color _rectangleFillingColor = Color.Red;
+        private TypeOfLine _typeOfLine = TypeOfLine.Solid;
 
         public Form1()
         {
@@ -28,8 +33,11 @@ namespace Lab1P3
 
         public void RedrawRectangle(PaintEventArgs e)
         {
-            var borderPen = new Pen(Color.Black, 3);
-            var insideBrush = new SolidBrush(Color.Red);
+            float[] dashValues = { 2, 2 };
+            var borderPen = new Pen(_rectangleBorderColor, _rectangelBorderThickness);
+            if (_typeOfLine == TypeOfLine.Dotted)
+                borderPen.DashPattern = dashValues;
+            var insideBrush = new SolidBrush(_rectangleFillingColor);
 
             e.Graphics.FillRectangle(insideBrush, _rectangle);
             e.Graphics.DrawRectangle(borderPen, _rectangle);
@@ -47,19 +55,8 @@ namespace Lab1P3
 
         private void panel1_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
-            {
-                if (!_mouseButtonIsPressed)
-                {
-                    _mouseDownLocation = e.Location;
-                    _rectangleMouseDownLocation = _rectangle.Location;
-                    if (_rectangle.Contains(e.Location))
-                        _lastClickedItemIsRectangle = true;
-                }
-
-                _mouseButtonIsPressed = true;
-            }
-
+            if (_rectangle.Contains(e.Location))
+                _lastClickedItemIsRectangle = true;
 
             switch (e.Button)
             {
@@ -68,13 +65,9 @@ namespace Lab1P3
                     {
                         _mouseDownLocation = e.Location;
                         _rectangleMouseDownLocation = _rectangle.Location;
-                        if (_rectangle.Contains(e.Location))
-                            _lastClickedItemIsRectangle = true;
                     }
 
                     _mouseButtonIsPressed = true;
-                    break;
-                case MouseButtons.Right:
                     break;
             }
         }
@@ -83,6 +76,24 @@ namespace Lab1P3
         {
             _mouseButtonIsPressed = false;
             _lastClickedItemIsRectangle = false;
+        }
+
+        private void panel1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (_lastClickedItemIsRectangle && e.Button == MouseButtons.Right)
+                RectangleMenuStrip.Show(e.Location);
+        }
+
+        private void SolidLineToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _typeOfLine = TypeOfLine.Solid;
+            panel1.Refresh();
+        }
+
+        private void DottedLineToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _typeOfLine = TypeOfLine.Dotted;
+            panel1.Refresh();
         }
     }
 }
