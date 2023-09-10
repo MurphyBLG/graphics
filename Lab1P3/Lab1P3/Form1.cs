@@ -95,5 +95,23 @@ namespace Lab1P3
             _typeOfLine = TypeOfLine.Dotted;
             panel1.Refresh();
         }
+
+        private void SetThicknessTo5MenuItem_Click(object sender, EventArgs e)
+        {
+            _rectangelBorderThickness = (int)WeightOfLine.Five;
+            panel1.Refresh();
+        }
+
+        private void SetThicknessTo10MenuItem_Click(object sender, EventArgs e)
+        {
+            _rectangelBorderThickness = (int)WeightOfLine.Ten;
+            panel1.Refresh();
+        }
+
+        private void SetThicknessTo15MenuItem_Click(object sender, EventArgs e)
+        {
+            _rectangelBorderThickness = (int)WeightOfLine.Fifteen;
+            panel1.Refresh();
+        }
     }
 }

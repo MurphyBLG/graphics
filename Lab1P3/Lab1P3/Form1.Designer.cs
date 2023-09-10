@@ -35,9 +35,9 @@
             SolidLineToolStripMenuItem = new ToolStripMenuItem();
             DottedLineToolStripMenuItem = new ToolStripMenuItem();
             толщинаToolStripMenuItem = new ToolStripMenuItem();
-            toolStripMenuItem2 = new ToolStripMenuItem();
-            toolStripMenuItem3 = new ToolStripMenuItem();
-            toolStripMenuItem4 = new ToolStripMenuItem();
+            SetThicknessTo5MenuItem = new ToolStripMenuItem();
+            SetThicknessTo10MenuItem = new ToolStripMenuItem();
+            SetThicknessTo15MenuItem = new ToolStripMenuItem();
             цветФонаToolStripMenuItem = new ToolStripMenuItem();
             цветЛинииОбводкиToolStripMenuItem = new ToolStripMenuItem();
             RectangleMenuStrip.SuspendLayout();
@@ -73,41 +73,44 @@
             // SolidLineToolStripMenuItem
             // 
             SolidLineToolStripMenuItem.Name = "SolidLineToolStripMenuItem";
-            SolidLineToolStripMenuItem.Size = new Size(224, 26);
+            SolidLineToolStripMenuItem.Size = new Size(190, 26);
             SolidLineToolStripMenuItem.Text = "Непрерывная";
             SolidLineToolStripMenuItem.Click += SolidLineToolStripMenuItem_Click;
             // 
             // DottedLineToolStripMenuItem
             // 
             DottedLineToolStripMenuItem.Name = "DottedLineToolStripMenuItem";
-            DottedLineToolStripMenuItem.Size = new Size(224, 26);
+            DottedLineToolStripMenuItem.Size = new Size(190, 26);
             DottedLineToolStripMenuItem.Text = "Пунктирная";
             DottedLineToolStripMenuItem.Click += DottedLineToolStripMenuItem_Click;
             // 
             // толщинаToolStripMenuItem
             // 
-            толщинаToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenuItem2, toolStripMenuItem3, toolStripMenuItem4 });
+            толщинаToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { SetThicknessTo5MenuItem, SetThicknessTo10MenuItem, SetThicknessTo15MenuItem });
             толщинаToolStripMenuItem.Name = "толщинаToolStripMenuItem";
             толщинаToolStripMenuItem.Size = new Size(222, 24);
             толщинаToolStripMenuItem.Text = "Толщина";
             // 
-            // toolStripMenuItem2
+            // SetThicknessTo5MenuItem
             // 
-            toolStripMenuItem2.Name = "toolStripMenuItem2";
-            toolStripMenuItem2.Size = new Size(224, 26);
-            toolStripMenuItem2.Text = "5";
+            SetThicknessTo5MenuItem.Name = "SetThicknessTo5MenuItem";
+            SetThicknessTo5MenuItem.Size = new Size(224, 26);
+            SetThicknessTo5MenuItem.Text = "5";
+            SetThicknessTo5MenuItem.Click += SetThicknessTo5MenuItem_Click;
             // 
-            // toolStripMenuItem3
+            // SetThicknessTo10MenuItem
             // 
-            toolStripMenuItem3.Name = "toolStripMenuItem3";
-            toolStripMenuItem3.Size = new Size(224, 26);
-            toolStripMenuItem3.Text = "10";
+            SetThicknessTo10MenuItem.Name = "SetThicknessTo10MenuItem";
+            SetThicknessTo10MenuItem.Size = new Size(224, 26);
+            SetThicknessTo10MenuItem.Text = "10";
+            SetThicknessTo10MenuItem.Click += SetThicknessTo10MenuItem_Click;
             // 
-            // toolStripMenuItem4
+            // SetThicknessTo15MenuItem
             // 
-            toolStripMenuItem4.Name = "toolStripMenuItem4";
-            toolStripMenuItem4.Size = new Size(224, 26);
-            toolStripMenuItem4.Text = "15";
+            SetThicknessTo15MenuItem.Name = "SetThicknessTo15MenuItem";
+            SetThicknessTo15MenuItem.Size = new Size(224, 26);
+            SetThicknessTo15MenuItem.Text = "15";
+            SetThicknessTo15MenuItem.Click += SetThicknessTo15MenuItem_Click;
             // 
             // цветФонаToolStripMenuItem
             // 
@@ -144,8 +147,8 @@
         private ToolStripMenuItem цветЛинииОбводкиToolStripMenuItem;
         private ToolStripMenuItem SolidLineToolStripMenuItem;
         private ToolStripMenuItem DottedLineToolStripMenuItem;
-        private ToolStripMenuItem toolStripMenuItem2;
-        private ToolStripMenuItem toolStripMenuItem3;
-        private ToolStripMenuItem toolStripMenuItem4;
+        private ToolStripMenuItem SetThicknessTo5MenuItem;
+        private ToolStripMenuItem SetThicknessTo10MenuItem;
+        private ToolStripMenuItem SetThicknessTo15MenuItem;
     }
 }
