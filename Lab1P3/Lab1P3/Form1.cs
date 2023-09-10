@@ -113,5 +113,23 @@ namespace Lab1P3
             _rectangelBorderThickness = (int)WeightOfLine.Fifteen;
             panel1.Refresh();
         }
+
+        private void BackgroundColorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ColorDialog.ShowDialog() == DialogResult.OK)
+            {
+                _rectangleFillingColor = ColorDialog.Color;
+                panel1.Refresh();
+            }
+        }
+
+        private void LineColorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ColorDialog.ShowDialog() == DialogResult.OK)
+            {
+                _rectangleBorderColor = ColorDialog.Color;
+                panel1.Refresh();
+            }
+        }
     }
 }

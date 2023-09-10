@@ -38,8 +38,9 @@
             SetThicknessTo5MenuItem = new ToolStripMenuItem();
             SetThicknessTo10MenuItem = new ToolStripMenuItem();
             SetThicknessTo15MenuItem = new ToolStripMenuItem();
-            цветФонаToolStripMenuItem = new ToolStripMenuItem();
-            цветЛинииОбводкиToolStripMenuItem = new ToolStripMenuItem();
+            BackgroundColorToolStripMenuItem = new ToolStripMenuItem();
+            LineColorToolStripMenuItem = new ToolStripMenuItem();
+            ColorDialog = new ColorDialog();
             RectangleMenuStrip.SuspendLayout();
             SuspendLayout();
             // 
@@ -59,7 +60,7 @@
             // RectangleMenuStrip
             // 
             RectangleMenuStrip.ImageScalingSize = new Size(20, 20);
-            RectangleMenuStrip.Items.AddRange(new ToolStripItem[] { типЛинииToolStripMenuItem, толщинаToolStripMenuItem, цветФонаToolStripMenuItem, цветЛинииОбводкиToolStripMenuItem });
+            RectangleMenuStrip.Items.AddRange(new ToolStripItem[] { типЛинииToolStripMenuItem, толщинаToolStripMenuItem, BackgroundColorToolStripMenuItem, LineColorToolStripMenuItem });
             RectangleMenuStrip.Name = "contextMenuStrip1";
             RectangleMenuStrip.Size = new Size(223, 128);
             // 
@@ -94,35 +95,37 @@
             // SetThicknessTo5MenuItem
             // 
             SetThicknessTo5MenuItem.Name = "SetThicknessTo5MenuItem";
-            SetThicknessTo5MenuItem.Size = new Size(224, 26);
+            SetThicknessTo5MenuItem.Size = new Size(108, 26);
             SetThicknessTo5MenuItem.Text = "5";
             SetThicknessTo5MenuItem.Click += SetThicknessTo5MenuItem_Click;
             // 
             // SetThicknessTo10MenuItem
             // 
             SetThicknessTo10MenuItem.Name = "SetThicknessTo10MenuItem";
-            SetThicknessTo10MenuItem.Size = new Size(224, 26);
+            SetThicknessTo10MenuItem.Size = new Size(108, 26);
             SetThicknessTo10MenuItem.Text = "10";
             SetThicknessTo10MenuItem.Click += SetThicknessTo10MenuItem_Click;
             // 
             // SetThicknessTo15MenuItem
             // 
             SetThicknessTo15MenuItem.Name = "SetThicknessTo15MenuItem";
-            SetThicknessTo15MenuItem.Size = new Size(224, 26);
+            SetThicknessTo15MenuItem.Size = new Size(108, 26);
             SetThicknessTo15MenuItem.Text = "15";
             SetThicknessTo15MenuItem.Click += SetThicknessTo15MenuItem_Click;
             // 
-            // цветФонаToolStripMenuItem
+            // BackgroundColorToolStripMenuItem
             // 
-            цветФонаToolStripMenuItem.Name = "цветФонаToolStripMenuItem";
-            цветФонаToolStripMenuItem.Size = new Size(222, 24);
-            цветФонаToolStripMenuItem.Text = "Цвет фона";
+            BackgroundColorToolStripMenuItem.Name = "BackgroundColorToolStripMenuItem";
+            BackgroundColorToolStripMenuItem.Size = new Size(222, 24);
+            BackgroundColorToolStripMenuItem.Text = "Цвет фона";
+            BackgroundColorToolStripMenuItem.Click += BackgroundColorToolStripMenuItem_Click;
             // 
-            // цветЛинииОбводкиToolStripMenuItem
+            // LineColorToolStripMenuItem
             // 
-            цветЛинииОбводкиToolStripMenuItem.Name = "цветЛинииОбводкиToolStripMenuItem";
-            цветЛинииОбводкиToolStripMenuItem.Size = new Size(222, 24);
-            цветЛинииОбводкиToolStripMenuItem.Text = "Цвет линии обводки";
+            LineColorToolStripMenuItem.Name = "LineColorToolStripMenuItem";
+            LineColorToolStripMenuItem.Size = new Size(222, 24);
+            LineColorToolStripMenuItem.Text = "Цвет линии обводки";
+            LineColorToolStripMenuItem.Click += LineColorToolStripMenuItem_Click;
             // 
             // Form1
             // 
@@ -143,12 +146,13 @@
         private ContextMenuStrip RectangleMenuStrip;
         private ToolStripMenuItem типЛинииToolStripMenuItem;
         private ToolStripMenuItem толщинаToolStripMenuItem;
-        private ToolStripMenuItem цветФонаToolStripMenuItem;
-        private ToolStripMenuItem цветЛинииОбводкиToolStripMenuItem;
+        private ToolStripMenuItem BackgroundColorToolStripMenuItem;
+        private ToolStripMenuItem LineColorToolStripMenuItem;
         private ToolStripMenuItem SolidLineToolStripMenuItem;
         private ToolStripMenuItem DottedLineToolStripMenuItem;
         private ToolStripMenuItem SetThicknessTo5MenuItem;
         private ToolStripMenuItem SetThicknessTo10MenuItem;
         private ToolStripMenuItem SetThicknessTo15MenuItem;
+        private ColorDialog ColorDialog;
     }
 }
