@@ -24,8 +24,13 @@ namespace Lab1P4
         private void CreateDotButton_Click(object sender, EventArgs e)
         {
             using var g = Graphics.FromImage(_bitmap);
-            _bitmap.SetPixel(Convert.ToInt32(XCordTextBox.Text), Convert.ToInt32(YCordTextBox.Text), _color);
+            var brush = new SolidBrush(_color);
+            var xCord = Convert.ToInt32(XCordTextBox.Text);
+            var yCord = Convert.ToInt32(YCordTextBox.Text);
+            var radius = 5;
+            g.FillEllipse(brush, xCord - radius, yCord-radius, 2*radius, 2 * radius);
             g.Flush();
+            this.Close();
         }
     }
 }
