@@ -32,6 +32,8 @@ public partial class MainForm : Form
 
     private void CreateRectangleToolStripMenuItem_Click(object sender, EventArgs e)
     {
-
+        var form = new CreateRectangleForm(_color, _bitmap);
+        form.ShowDialog();
+        MainPictureBox.Invalidate();
     }
 }
