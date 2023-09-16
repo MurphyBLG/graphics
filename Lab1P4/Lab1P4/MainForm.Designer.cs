@@ -92,6 +92,7 @@
             CreateRectangleToolStripMenuItem.Name = "CreateRectangleToolStripMenuItem";
             CreateRectangleToolStripMenuItem.Size = new Size(180, 22);
             CreateRectangleToolStripMenuItem.Text = "Прямоугольник";
+            CreateRectangleToolStripMenuItem.Click += CreateRectangleToolStripMenuItem_Click;
             // 
             // CreateEllipseToolStripMenuItem
             // 

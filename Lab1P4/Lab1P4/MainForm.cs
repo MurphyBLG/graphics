@@ -2,8 +2,8 @@ namespace Lab1P4;
 
 public partial class MainForm : Form
 {
-    private Bitmap _bitmap;
-    private Brush _brush;
+    private readonly Bitmap _bitmap;
+    private readonly Brush _brush;
     private readonly Color _color;
 
     public MainForm()
@@ -28,5 +28,10 @@ public partial class MainForm : Form
         var form = new CreateLineForm(_bitmap, _color);
         form.ShowDialog();
         MainPictureBox.Invalidate();
+    }
+
+    private void CreateRectangleToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+
     }
 }
