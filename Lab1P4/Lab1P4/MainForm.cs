@@ -22,4 +22,11 @@ public partial class MainForm : Form
         form.ShowDialog();
         MainPictureBox.Invalidate();
     }
+
+    private void CreateLineToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        var form = new CreateLineForm(_bitmap, _color);
+        form.ShowDialog();
+        MainPictureBox.Invalidate();
+    }
 }

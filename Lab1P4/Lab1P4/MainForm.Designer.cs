@@ -32,13 +32,13 @@
             FileToolStripMenuItem = new ToolStripMenuItem();
             CreateToolStripMenuItem = new ToolStripMenuItem();
             CreateObjectToolStripMenuItem = new ToolStripMenuItem();
-            CreateStringToolStripMenuItem = new ToolStripMenuItem();
-            ExitToolStripMenuItem = new ToolStripMenuItem();
-            MainPictureBox = new PictureBox();
             CreateDotToolStripMenuItem = new ToolStripMenuItem();
             CreateLineToolStripMenuItem = new ToolStripMenuItem();
             CreateRectangleToolStripMenuItem = new ToolStripMenuItem();
             CreateEllipseToolStripMenuItem = new ToolStripMenuItem();
+            CreateStringToolStripMenuItem = new ToolStripMenuItem();
+            ExitToolStripMenuItem = new ToolStripMenuItem();
+            MainPictureBox = new PictureBox();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)MainPictureBox).BeginInit();
             SuspendLayout();
@@ -73,6 +73,32 @@
             CreateObjectToolStripMenuItem.Size = new Size(180, 22);
             CreateObjectToolStripMenuItem.Text = "Объект";
             // 
+            // CreateDotToolStripMenuItem
+            // 
+            CreateDotToolStripMenuItem.Name = "CreateDotToolStripMenuItem";
+            CreateDotToolStripMenuItem.Size = new Size(180, 22);
+            CreateDotToolStripMenuItem.Text = "Точка";
+            CreateDotToolStripMenuItem.Click += CreateDotToolStripMenuItem_Click;
+            // 
+            // CreateLineToolStripMenuItem
+            // 
+            CreateLineToolStripMenuItem.Name = "CreateLineToolStripMenuItem";
+            CreateLineToolStripMenuItem.Size = new Size(180, 22);
+            CreateLineToolStripMenuItem.Text = "Линия";
+            CreateLineToolStripMenuItem.Click += CreateLineToolStripMenuItem_Click;
+            // 
+            // CreateRectangleToolStripMenuItem
+            // 
+            CreateRectangleToolStripMenuItem.Name = "CreateRectangleToolStripMenuItem";
+            CreateRectangleToolStripMenuItem.Size = new Size(180, 22);
+            CreateRectangleToolStripMenuItem.Text = "Прямоугольник";
+            // 
+            // CreateEllipseToolStripMenuItem
+            // 
+            CreateEllipseToolStripMenuItem.Name = "CreateEllipseToolStripMenuItem";
+            CreateEllipseToolStripMenuItem.Size = new Size(180, 22);
+            CreateEllipseToolStripMenuItem.Text = "Элипс";
+            // 
             // CreateStringToolStripMenuItem
             // 
             CreateStringToolStripMenuItem.Name = "CreateStringToolStripMenuItem";
@@ -92,31 +118,6 @@
             MainPictureBox.Size = new Size(776, 411);
             MainPictureBox.TabIndex = 1;
             MainPictureBox.TabStop = false;
-            // 
-            // CreateDotToolStripMenuItem
-            // 
-            CreateDotToolStripMenuItem.Name = "CreateDotToolStripMenuItem";
-            CreateDotToolStripMenuItem.Size = new Size(180, 22);
-            CreateDotToolStripMenuItem.Text = "Точка";
-            CreateDotToolStripMenuItem.Click += CreateDotToolStripMenuItem_Click;
-            // 
-            // CreateLineToolStripMenuItem
-            // 
-            CreateLineToolStripMenuItem.Name = "CreateLineToolStripMenuItem";
-            CreateLineToolStripMenuItem.Size = new Size(180, 22);
-            CreateLineToolStripMenuItem.Text = "Линия";
-            // 
-            // CreateRectangleToolStripMenuItem
-            // 
-            CreateRectangleToolStripMenuItem.Name = "CreateRectangleToolStripMenuItem";
-            CreateRectangleToolStripMenuItem.Size = new Size(180, 22);
-            CreateRectangleToolStripMenuItem.Text = "Прямоугольник";
-            // 
-            // CreateEllipseToolStripMenuItem
-            // 
-            CreateEllipseToolStripMenuItem.Name = "CreateEllipseToolStripMenuItem";
-            CreateEllipseToolStripMenuItem.Size = new Size(180, 22);
-            CreateEllipseToolStripMenuItem.Text = "Элипс";
             // 
             // MainForm
             // 
