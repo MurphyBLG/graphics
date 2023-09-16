@@ -36,4 +36,11 @@ public partial class MainForm : Form
         form.ShowDialog();
         MainPictureBox.Invalidate();
     }
+
+    private void CreateEllipseToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        var form = new CreateElipseForm(_bitmap, _color);
+        form.ShowDialog();
+        MainPictureBox.Invalidate();
+    }
 }

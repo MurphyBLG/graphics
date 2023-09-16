@@ -99,6 +99,7 @@
             CreateEllipseToolStripMenuItem.Name = "CreateEllipseToolStripMenuItem";
             CreateEllipseToolStripMenuItem.Size = new Size(180, 22);
             CreateEllipseToolStripMenuItem.Text = "Элипс";
+            CreateEllipseToolStripMenuItem.Click += CreateEllipseToolStripMenuItem_Click;
             // 
             // CreateStringToolStripMenuItem
             // 
