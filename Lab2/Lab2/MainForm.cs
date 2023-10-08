@@ -66,8 +66,8 @@ public partial class MainForm : Form
 
         for (int i = 0; i < _currentPoints.Count; i++)
         {
-            var newX = _currentPoints[i].X * MathF.Cos(angle) - _currentPoints[i].Y * MathF.Sin(angle);
-            var newY = _currentPoints[i].X * MathF.Sin(angle) + _currentPoints[i].Y * MathF.Cos(angle);
+            var newX = _currentPoints[i].X * MathF.Cos(angle) - _currentPoints[i].Y * MathF.Sin(angle) - (_currentPoints[0].X * MathF.Cos(angle) - _currentPoints[0].Y * MathF.Sin(angle)) + _currentPoints[0].X;
+            var newY = _currentPoints[i].X * MathF.Sin(angle) + _currentPoints[i].Y * MathF.Cos(angle) - (_currentPoints[0].X * MathF.Sin(angle) + _currentPoints[0].Y * MathF.Cos(angle)) + _currentPoints[0].Y;
             _currentPoints[i] = new PointF(newX, newY);
         }
 
