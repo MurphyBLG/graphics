@@ -7,19 +7,28 @@ public partial class MainForm : Form
     private readonly List<PointF> _originalPoints = new()
     {
         new PointF(0, 0),
-        new PointF(20, 30),
-        new PointF(30, 25),
-        new PointF(40, 30),
-        new PointF(60, 0),
-        new PointF(30, 22)
+        new PointF(0, 20),
+        new PointF(20, 15),
+        new PointF(40, 20),
+        new PointF(40, 0),
+        new PointF(20, 5)
     };
+
+    private readonly List<PointF> _originalMiddleLine = new()
+    {
+        new PointF(20, 15),
+        new PointF(20, 5),
+    };
+
     private List<PointF> _currentPoints = new();
+    private List<PointF> _currentMiddleline = new();
     private readonly Bitmap _bitmap;
 
     public MainForm()
     {
         InitializeComponent();
         _currentPoints = _originalPoints;
+        _currentMiddleline = _originalMiddleLine;
         _bitmap = new Bitmap(MainPictureBox.Width, MainPictureBox.Height);
         MainPictureBox.Image = (Image)_bitmap;
         MainPictureBox.BackgroundImageLayout = ImageLayout.None;
@@ -39,6 +48,9 @@ public partial class MainForm : Form
         for (int i = 0; i < _currentPoints.Count; i++)
             g.DrawLine(pen, _currentPoints[i], _currentPoints[(i + 1) % _currentPoints.Count]);
 
+        for (int i = 0; i < _currentMiddleline.Count; i++)
+            g.DrawLine(pen, _currentMiddleline[i], _currentMiddleline[(i + 1) % _currentMiddleline.Count]);
+
         g.Flush();
         MainPictureBox.Invalidate();
     }
@@ -50,6 +62,9 @@ public partial class MainForm : Form
 
         for (int i = 0; i < _currentPoints.Count; i++)
             _currentPoints[i] = new PointF(_currentPoints[i].X + xMove, _currentPoints[i].Y + yMove);
+
+        for (int i = 0; i < _currentMiddleline.Count; i++)
+            _currentMiddleline[i] = new PointF(_currentMiddleline[i].X + xMove, _currentMiddleline[i].Y + yMove);
 
         DrawFigure();
     }
@@ -71,6 +86,13 @@ public partial class MainForm : Form
             _currentPoints[i] = new PointF(newX, newY);
         }
 
+        for (int i = 0; i < _currentMiddleline.Count; i++)
+        {
+            var newX = _currentMiddleline[i].X * MathF.Cos(angle) - _currentMiddleline[i].Y * MathF.Sin(angle) - (_currentPoints[0].X * MathF.Cos(angle) - _currentPoints[0].Y * MathF.Sin(angle)) + _currentPoints[0].X;
+            var newY = _currentMiddleline[i].X * MathF.Sin(angle) + _currentMiddleline[i].Y * MathF.Cos(angle) - (_currentPoints[0].X * MathF.Sin(angle) + _currentPoints[0].Y * MathF.Cos(angle)) + _currentPoints[0].Y;
+            _currentMiddleline[i] = new PointF(newX, newY);
+        }
+
         DrawFigure();
     }
 
@@ -88,6 +110,13 @@ public partial class MainForm : Form
             var newX = _currentPoints[i].X * k;
             var newY = _currentPoints[i].Y * k;
             _currentPoints[i] = new PointF(newX, newY);
+        }
+
+        for (int i = 0; i < _currentMiddleline.Count; i++)
+        {
+            var newX = _currentMiddleline[i].X * k;
+            var newY = _currentMiddleline[i].Y * k;
+            _currentMiddleline[i] = new PointF(newX, newY);
         }
 
         DrawFigure();
