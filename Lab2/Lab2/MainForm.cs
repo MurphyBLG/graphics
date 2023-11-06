@@ -7,17 +7,17 @@ public partial class MainForm : Form
     private readonly List<PointF> _originalPoints = new()
     {
         new PointF(0, 0),
-        new PointF(0, 20),
-        new PointF(20, 15),
-        new PointF(40, 20),
-        new PointF(40, 0),
-        new PointF(20, 5)
+        new PointF(0, 80),
+        new PointF(80, 60),
+        new PointF(160, 80),
+        new PointF(160, 0),
+        new PointF(80, 20)
     };
 
     private readonly List<PointF> _originalMiddleLine = new()
     {
-        new PointF(20, 15),
-        new PointF(20, 5),
+        new PointF(80, 60),
+        new PointF(80, 20),
     };
 
     private List<PointF> _currentPoints = new();
@@ -41,6 +41,12 @@ public partial class MainForm : Form
 
     private void DrawFigure()
     {
+        if (!CanDraw())
+        {
+            MessageBox.Show("невозможно отрисовать фигуру, так как она вфйдет за пол€");
+            return;
+        }
+
         ClearImage();
         using var g = Graphics.FromImage(_bitmap);
         var pen = new Pen(Color.Black);
@@ -57,6 +63,18 @@ public partial class MainForm : Form
 
     private void ApplyMove_Click(object sender, EventArgs e)
     {
+        if (string.IsNullOrEmpty(XCordTextBox.Text))
+        {
+            MessageBox.Show("¬ведите сдвиг по X");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(YCordTextBox.Text))
+        {
+            MessageBox.Show("¬ведите сдвиг по X");
+            return;
+        }
+
         var xMove = Int32.Parse(XCordTextBox.Text);
         var yMove = Int32.Parse(YCordTextBox.Text);
 
@@ -67,6 +85,9 @@ public partial class MainForm : Form
             _currentMiddleline[i] = new PointF(_currentMiddleline[i].X + xMove, _currentMiddleline[i].Y + yMove);
 
         DrawFigure();
+
+        XCordTextBox.Text = "";
+        YCordTextBox.Text = "";
     }
 
     private void ClearImage()
@@ -77,6 +98,12 @@ public partial class MainForm : Form
 
     private void ApplyRotation_Click(object sender, EventArgs e)
     {
+        if (string.IsNullOrEmpty(AngleTextBox.Text))
+        {
+            MessageBox.Show("¬ведите угол вращени€");
+            return;
+        }
+
         var angle = ToRadians(float.Parse(AngleTextBox.Text));
 
         for (int i = 0; i < _currentPoints.Count; i++)
@@ -94,6 +121,7 @@ public partial class MainForm : Form
         }
 
         DrawFigure();
+        AngleTextBox.Text = "";
     }
 
     private float ToRadians(double degrees)
@@ -103,22 +131,71 @@ public partial class MainForm : Form
 
     private void ApplyStretching_Click(object sender, EventArgs e)
     {
-        var k = float.Parse(CoefficientTextBox.Text);
+        if (string.IsNullOrEmpty(CoefficientXTextBox.Text))
+        {
+            MessageBox.Show("¬ведите коэффициент раст€жени€ по X");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(CoefficientYTextBox.Text))
+        {
+            MessageBox.Show("¬ведите коэффициент раст€жени€ по Y");
+            return;
+        }
+
+        var kx = float.Parse(CoefficientXTextBox.Text);
+        var ky = float.Parse(CoefficientYTextBox.Text);
+        var center = GetCenter();
 
         for (int i = 0; i < _currentPoints.Count; i++)
         {
-            var newX = _currentPoints[i].X * k;
-            var newY = _currentPoints[i].Y * k;
-            _currentPoints[i] = new PointF(newX, newY);
+            _currentPoints[i] = new PointF(_currentPoints[i].X - center.X, _currentPoints[i].Y - center.Y);
+            _currentPoints[i] = new PointF(_currentPoints[i].X * kx, _currentPoints[i].Y * ky);
+            _currentPoints[i] = new PointF(_currentPoints[i].X + center.X, _currentPoints[i].Y + center.Y);
         }
 
         for (int i = 0; i < _currentMiddleline.Count; i++)
         {
-            var newX = _currentMiddleline[i].X * k;
-            var newY = _currentMiddleline[i].Y * k;
-            _currentMiddleline[i] = new PointF(newX, newY);
+            _currentMiddleline[i] = new PointF(_currentMiddleline[i].X - center.X, _currentMiddleline[i].Y - center.Y);
+            _currentMiddleline[i] = new PointF(_currentMiddleline[i].X * kx, _currentMiddleline[i].Y * ky);
+            _currentMiddleline[i] = new PointF(_currentMiddleline[i].X + center.X, _currentMiddleline[i].Y + center.Y);
         }
 
         DrawFigure();
+        CoefficientXTextBox.Text = "";
+        CoefficientYTextBox.Text = "";
+    }
+
+    private PointF GetCenter()
+    {
+        var center = new PointF(0, 0);
+
+        foreach (var point in _currentPoints)
+        {
+            center.X += point.X;
+            center.Y += point.Y;
+        }
+
+        center.X /= _currentPoints.Count;
+        center.Y /= _currentPoints.Count;
+
+        return center;
+    }
+
+    private bool CanDraw()
+    {
+        foreach (var cp in _currentPoints)
+        {
+            if (cp.X > _bitmap.Width || cp.X < 0 || cp.Y > _bitmap.Height || cp.Y < 0)
+                return false;
+        }
+
+        foreach (var cp in _currentMiddleline)
+        {
+            if (cp.X > _bitmap.Width || cp.X < 0 || cp.Y > _bitmap.Height || cp.Y < 0)
+                return false;
+        }
+
+        return true;
     }
 }
