@@ -149,44 +149,60 @@ public partial class MainForm : Form
             return;
         }
 
-        var currentX = _selectedPoint.Value.X;
-        var currentY = _selectedPoint.Value.Y;
-        var fillArray = new bool[_bitmap.Height, _bitmap.Width];
+        var emptyColor = _bitmap.GetPixel(1, 1);
+        var currentColor = _bitmap.GetPixel(_selectedPoint.Value.X, _selectedPoint.Value.Y);
 
-
-        while (true)
+        var segments = new List<(PointF start, PointF end)>();
+        for (int Y = 0; Y < _bitmap.Height; Y++)
         {
-            fillArray[currentY, currentX] = true;
-            currentX += 1;
-           
-            if (currentX >= _bitmap.Width)
+            var startPoint = PointF.Empty;
+
+            for (int X = 0; X < _bitmap.Width; X++)
             {
-                currentX = 0;
-                currentY += 1; 
+                var thisColor = _bitmap.GetPixel(X, Y);
 
-                if (currentY >= _bitmap.Height)
-                    break; 
-            }
-
-            while (currentX >= 0.0f && !IsPointInPolygon(_originalPoints, currentX, currentY))
-            {
-                currentX -= 1; // Изменение координаты X с плавающей точкой.
-            }
-
-            if (!IsPointInPolygon(_originalPoints, currentX, currentY)   )
-                break;
-        }
-
-        for (var y = 0; y < _bitmap.Height; y++)
-        {
-            for (var x = 0; x < _bitmap.Width; x++)
-            {
-                if (fillArray[y, x])
+                if (thisColor != currentColor || thisColor != emptyColor)
                 {
-                    _bitmap.SetPixel(x, y, _fillColor);
-                    await Task.Delay(1);
+                    if (startPoint == PointF.Empty)
+                    {
+                        startPoint = new PointF(X + 1, Y);
+                    }
+                    else
+                    {
+                        var endPoint = new PointF(X - 1, Y);
+                        if (startPoint.X != X && startPoint.X != endPoint.X)
+                            segments.Add(new(startPoint, new PointF(X - 1, Y)));
+                        startPoint = new PointF(X + 1, Y);
+                    }
                 }
             }
         }
+
+        foreach (var segment in segments)
+        {
+            var prevPixel = _bitmap.GetPixel((int)segment.start.X, (int)segment.start.Y - 1);
+            if ((prevPixel != currentColor || prevPixel != emptyColor) && SegmentIsNotEnd(segment.start))
+            {
+                for (int x = (int)segment.start.X; x <= (int)segment.end.X; x++)
+                {
+                    _bitmap.SetPixel(x, (int)segment.start.Y, _fillColor);
+                }
+            }
+
+            MainPictureBox.Refresh();
+        }
+    }
+
+    private bool SegmentIsNotEnd(PointF point)
+    {
+        var emptyColor = _bitmap.GetPixel(1, 1);
+
+        for (int Y = (int)point.Y; Y < _bitmap.Height; Y++)
+        {
+            if (_bitmap.GetPixel((int)point.X, Y) != emptyColor)
+                return true;
+        }
+
+        return false;
     }
 }
