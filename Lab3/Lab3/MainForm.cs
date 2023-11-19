@@ -5,7 +5,7 @@ namespace Lab3;
 
 public partial class MainForm : Form
 {
-    private Color _fillColor = ColorTranslator.FromHtml("#333333");
+    private Color _fillColor = ColorTranslator.FromHtml("#444fff");
     private readonly List<PointF> _originalPoints = new()
     {
         new PointF(300, 150),
@@ -22,7 +22,7 @@ public partial class MainForm : Form
         new PointF(420, 180)
     };
 
-    private Point? _selectedPoint;
+    private Point _selectedPoint;
 
     private readonly Bitmap _bitmap;
 
@@ -32,7 +32,7 @@ public partial class MainForm : Form
         _bitmap = new Bitmap(MainPictureBox.Width, MainPictureBox.Height);
         MainPictureBox.Image = (Image)_bitmap;
         MainPictureBox.BackgroundImageLayout = ImageLayout.None;
-        _selectedPoint = null;
+        _selectedPoint = new Point(301, 200);
         DrawFigure();
     }
 
@@ -97,22 +97,10 @@ public partial class MainForm : Form
 
     private void SeedFillingButton_Click(object sender, EventArgs e)
     {
-        if (_selectedPoint is null)
-        {
-            MessageBox.Show("Пожалуйста, выберите точку из которой желаете начать заливку", "Вниманиа!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            return;
-        }
-
-        if (!IsPointInPolygon(_originalPoints, _selectedPoint.Value.X, _selectedPoint.Value.Y))
-        {
-            MessageBox.Show("Выбранная точка не находится внутри фигуры", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            return;
-        }
-
-        var targetColor = _bitmap.GetPixel(_selectedPoint.Value.X, _selectedPoint.Value.Y);
+        var targetColor = _bitmap.GetPixel(_selectedPoint.X, _selectedPoint.Y);
 
         var pixelsToFill = new Stack<Point>();
-        pixelsToFill.Push(new Point(_selectedPoint.Value.X, _selectedPoint.Value.Y));
+        pixelsToFill.Push(new Point(_selectedPoint.X, _selectedPoint.Y));
 
         while (pixelsToFill.Count > 0)
         {
@@ -135,22 +123,10 @@ public partial class MainForm : Form
         }
     }
 
-    private async void LineByLineFillingButton_Click(object sender, EventArgs e)
+    private void LineByLineFillingButton_Click(object sender, EventArgs e)
     {
-        if (_selectedPoint is null)
-        {
-            MessageBox.Show("Пожалуйста, выберите точку из которой желаете начать заливку", "Вниманиа!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            return;
-        }
-
-        if (!IsPointInPolygon(_originalPoints, _selectedPoint.Value.X, _selectedPoint.Value.Y))
-        {
-            MessageBox.Show("Выбранная точка не находится внутри фигуры", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            return;
-        }
-
         var emptyColor = _bitmap.GetPixel(1, 1);
-        var currentColor = _bitmap.GetPixel(_selectedPoint.Value.X, _selectedPoint.Value.Y);
+        var currentColor = _bitmap.GetPixel(_selectedPoint.X, _selectedPoint.Y);
 
         var segments = new List<(PointF start, PointF end)>();
         for (int Y = 0; Y < _bitmap.Height; Y++)
@@ -161,7 +137,7 @@ public partial class MainForm : Form
             {
                 var thisColor = _bitmap.GetPixel(X, Y);
 
-                if (thisColor != currentColor || thisColor != emptyColor)
+                if (thisColor != currentColor && thisColor != emptyColor)
                 {
                     if (startPoint == PointF.Empty)
                     {
@@ -178,15 +154,14 @@ public partial class MainForm : Form
             }
         }
 
+        using var g = Graphics.FromImage(_bitmap);
+        var pen = new Pen(_fillColor);
         foreach (var segment in segments)
         {
             var prevPixel = _bitmap.GetPixel((int)segment.start.X, (int)segment.start.Y - 1);
-            if ((prevPixel != currentColor || prevPixel != emptyColor) && SegmentIsNotEnd(segment.start))
+            if ((prevPixel != currentColor && prevPixel != emptyColor) && SegmentIsNotEnd(segment.start))
             {
-                for (int x = (int)segment.start.X; x <= (int)segment.end.X; x++)
-                {
-                    _bitmap.SetPixel(x, (int)segment.start.Y, _fillColor);
-                }
+                g.DrawLine(pen, (int)segment.start.X, (int)segment.start.Y, segment.end.X, (int)segment.start.Y);
             }
 
             MainPictureBox.Refresh();
