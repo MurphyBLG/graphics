@@ -127,7 +127,7 @@ public partial class MainForm : Form
     private void LineByLineFillingButton_Click(object sender, EventArgs e)
     {
         var segments = new List<(Point start, Point end)>();
-        //var prevList = new List<int>();
+        var prevList = new List<int>();
         bool recordsInPrev = false;
 
         for (var y = 0; y < _bitmap.Height; y++)
@@ -155,36 +155,38 @@ public partial class MainForm : Form
             if (xCrossings.Count > 1)
             {
                 var prevValue = recordsInPrev;
+               
                 recordsInPrev = true;
                 if (!prevValue)
                     continue;
+
+                if (prevList.Count % 2 == 0)
+                {
+                    for (var i = 0; i < prevList.Count; i += 2)
+                    {
+                        var startPoint = new Point(prevList[i] + 1, y - 1);
+                        var endPoint = new Point(prevList[i + 1] - 1, y - 1);
+                        segments.Add(new(startPoint, endPoint));
+                    }
+                }
+                else
+                {
+                    for (var i = 0; i < prevList.Count - 1; i++)
+                    {
+                        var startPoint = new Point(prevList[i] + 1, y - 1);
+                        var endPoint = new Point(prevList[i + 1] - 1, y - 1);
+                        segments.Add(new(startPoint, endPoint));
+                    }
+                }
             }
             else
             {
                 recordsInPrev = false;
+                prevList = new List<int>(xCrossings);
                 continue;
             }
 
-            if (xCrossings.Count % 2 == 0)
-            {
-                for (var i = 0; i < xCrossings.Count; i += 2)
-                {
-                    var startPoint = new Point(xCrossings[i] + 1, y);
-                    var endPoint = new Point(xCrossings[i + 1] - 1, y);
-                    segments.Add(new(startPoint, endPoint));
-                }
-            }
-            else
-            {
-                for (var i = 0; i < xCrossings.Count - 1; i++)
-                {
-                    var startPoint = new Point(xCrossings[i] + 1, y);
-                    var endPoint = new Point(xCrossings[i + 1] - 1, y);
-                    segments.Add(new(startPoint, endPoint));
-                }
-            }
-
-            //prevList = new List<int>(xCrossings);
+            prevList = new List<int>(xCrossings);
         }
 
         using var g = Graphics.FromImage(_bitmap);
