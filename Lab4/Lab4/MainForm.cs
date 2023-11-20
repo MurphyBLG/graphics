@@ -3,6 +3,9 @@
 public partial class MainForm : Form
 {
     private DrawModes _drawMode;
+    private int? _trunkHeightForSingleTree;
+    private int? _countOfBranchesForSingleTree;
+    private int? _countOfTrees;
 
     public MainForm()
     {
@@ -17,10 +20,10 @@ public partial class MainForm : Form
 
     private void DrawTreeAt(Graphics g, int x, int y, int height, int branches)
     {
-        Pen trunkPen = new Pen(Color.Brown, height / 10);
+        var trunkPen = new Pen(Color.Brown, height / 10);
         g.FillRectangle(trunkPen.Brush, x - trunkPen.Width / 2, y, trunkPen.Width, height);
 
-        for (int i = 1; i <= branches; i++)
+        for (var i = branches; i >= 1; i--)
         {
             DrawBranch(g, x, y - (branches - i) * height / 4, height / 2, i * height / 4);
         }
@@ -30,12 +33,13 @@ public partial class MainForm : Form
     {
         Point[] trianglePoints =
         {
-            new Point(x, y),
-            new Point(x - width / 2, y + length),
-            new Point(x + width / 2, y + length)
+            new(x, y),
+            new(x - width / 2, y + length),
+            new(x + width / 2, y + length)
         };
 
         g.FillPolygon(Brushes.Green, trianglePoints);
+        g.DrawPolygon(Pens.Black, trianglePoints);
     }
 
     private void DrawPineForest(int x, int y, int treeCount)
@@ -70,12 +74,81 @@ public partial class MainForm : Form
         switch (_drawMode)
         {
             case DrawModes.SingleTree:
-                DrawTree(x, y, 50, 2);
+                if (_trunkHeightForSingleTree is null)
+                {
+                    MessageBox.Show("Задайте высоту ствола", "Внимание!");
+                    return;
+                }
+
+                if (_countOfBranchesForSingleTree is null)
+                {
+                    MessageBox.Show("Задайте количество ветвей", "Внимание!");
+                    return;
+                }
+                DrawTree(x, y, _trunkHeightForSingleTree.Value, _countOfBranchesForSingleTree.Value);
                 break;
             case DrawModes.MultipleTrees:
-                DrawPineForest(x, y, 1);
+                if (_countOfTrees is null)
+                {
+                    MessageBox.Show("Задайте количество ветвей", "Внимание!");
+                    return;
+                }
+
+                DrawPineForest(x, y, _countOfTrees.Value);
                 break;
         }
     }
 
+    private void ClearButton_Click(object sender, EventArgs e)
+    {
+        MainPictureBox.Image = null;
+    }
+
+    private void SaveSingleTreeParams_Click(object sender, EventArgs e)
+    {
+        if (string.IsNullOrEmpty(TrunkHeight.Text))
+        {
+            MessageBox.Show("Задайте высоту ствола", "Внимание!");
+            return;
+        }
+
+        if (!int.TryParse(TrunkHeight.Text, out var treeHeight))
+        {
+            MessageBox.Show("Высота ствола должна быть целым числом", "Внимание!");
+            return;
+        }
+
+        _trunkHeightForSingleTree = treeHeight;
+
+        if (string.IsNullOrEmpty(SingleTreeCountOfBranches.Text))
+        {
+            MessageBox.Show("Задайте количество ветвей", "Внимание!");
+            return;
+        }
+
+        if (!int.TryParse(SingleTreeCountOfBranches.Text, out var countOfBranches))
+        {
+            MessageBox.Show("Высота ствола должна быть целым числом", "Внимание!");
+            return;
+        }
+
+        _countOfBranchesForSingleTree = countOfBranches;
+    }
+
+    private void SaveParametersForMultipleTrees_Click(object sender, EventArgs e)
+    {
+        if (string.IsNullOrEmpty(CountOfTreesTextBox.Text))
+        {
+            MessageBox.Show("Задайте количество деревьев", "Внимание!");
+            return;
+        }
+
+        if (!int.TryParse(CountOfTreesTextBox.Text, out var countOfTrees))
+        {
+            MessageBox.Show("Количество деревьев должно быть целым числом", "Внимание!");
+            return;
+        }
+
+        _countOfTrees = countOfTrees;
+    }
 }
