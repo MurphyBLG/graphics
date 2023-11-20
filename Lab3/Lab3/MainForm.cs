@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Net;
 using static System.Windows.Forms.AxHost;
 
 namespace Lab3;
@@ -6,20 +7,20 @@ namespace Lab3;
 public partial class MainForm : Form
 {
     private Color _fillColor = ColorTranslator.FromHtml("#444fff");
-    private readonly List<PointF> _originalPoints = new()
+    private readonly List<Point> _originalPoints = new()
     {
-        new PointF(300, 150),
-        new PointF(300, 270),
-        new PointF(420, 240),
-        new PointF(540, 270),
-        new PointF(540, 150),
-        new PointF(420, 180)
+        new Point(300, 150),
+        new Point(300, 270),
+        new Point(420, 240),
+        new Point(540, 270),
+        new Point(540, 150),
+        new Point(420, 180)
     };
 
-    private readonly List<PointF> _originalMiddleLine = new()
+    private readonly List<Point> _originalMiddleLine = new()
     {
-        new PointF(420, 240),
-        new PointF(420, 180)
+        new Point(420, 240),
+        new Point(420, 180)
     };
 
     private Point _selectedPoint;
@@ -40,7 +41,7 @@ public partial class MainForm : Form
     {
         ClearImage();
         using var g = Graphics.FromImage(_bitmap);
-        var pen = new Pen(Color.Black);
+        var pen = new Pen(Color.Black, 1);
 
         for (var i = 0; i < _originalPoints.Count; i++)
             g.DrawLine(pen, _originalPoints[i], _originalPoints[(i + 1) % _originalPoints.Count]);
@@ -76,7 +77,7 @@ public partial class MainForm : Form
         _selectedPoint = new Point(e.X, e.Y);
     }
 
-    public bool IsPointInPolygon(List<PointF> polygon, int x, int y)
+    public bool IsPointInPolygon(List<Point> polygon, int x, int y)
     {
         var crossings = 0;
         for (var i = 0; i < polygon.Count; i++)
@@ -125,41 +126,72 @@ public partial class MainForm : Form
 
     private void LineByLineFillingButton_Click(object sender, EventArgs e)
     {
-        var segments = new List<(PointF start, PointF end)>();
+        var segments = new List<(Point start, Point end)>();
+        //var prevList = new List<int>();
+        bool recordsInPrev = false;
 
         for (var y = 0; y < _bitmap.Height; y++)
         {
-            var startPoint = PointF.Empty;
+            var xCrossings = new List<int>();
+            var prevColor = Color.Empty;
 
             for (var x = 0; x < _bitmap.Width; x++)
             {
                 var thisColor = _bitmap.GetPixel(x, y);
 
-                if (thisColor.ToArgb() != Color.Black.ToArgb()) 
+                if (thisColor.ToArgb() != Color.Black.ToArgb())
+                {
+                    prevColor = Color.Empty;
+                    continue;
+                }
+
+                if (prevColor != Color.Empty) 
                     continue;
 
-                if (startPoint == PointF.Empty)
-                {
-                    if (!IsPointInPolygon(_originalPoints, x + 1, y))
-                        continue;
+                prevColor = Color.Black;
+                xCrossings.Add(x);
+            }
 
-                    startPoint = new PointF(x + 1, y);
-                    x++;
-                }
-                else
+            if (xCrossings.Count > 1)
+            {
+                var prevValue = recordsInPrev;
+                recordsInPrev = true;
+                if (!prevValue)
+                    continue;
+            }
+            else
+            {
+                recordsInPrev = false;
+                continue;
+            }
+
+            if (xCrossings.Count % 2 == 0)
+            {
+                for (var i = 0; i < xCrossings.Count; i += 2)
                 {
-                    var endPoint = new PointF(x - 1, y);
+                    var startPoint = new Point(xCrossings[i] + 1, y);
+                    var endPoint = new Point(xCrossings[i + 1] - 1, y);
                     segments.Add(new(startPoint, endPoint));
-                    startPoint = IsPointInPolygon(_originalPoints, x + 1, y) ? new PointF(x + 1, y) : PointF.Empty;
                 }
             }
+            else
+            {
+                for (var i = 0; i < xCrossings.Count - 1; i++)
+                {
+                    var startPoint = new Point(xCrossings[i] + 1, y);
+                    var endPoint = new Point(xCrossings[i + 1] - 1, y);
+                    segments.Add(new(startPoint, endPoint));
+                }
+            }
+
+            //prevList = new List<int>(xCrossings);
         }
 
         using var g = Graphics.FromImage(_bitmap);
         var pen = new Pen(_fillColor);
         foreach (var segment in segments)
         {
-            g.DrawLine(pen, (int)segment.start.X, (int)segment.start.Y, segment.end.X, (int)segment.start.Y);
+            g.DrawLine(pen, segment.start.X, segment.start.Y, segment.end.X, segment.start.Y);
 
             MainPictureBox.Refresh();
         }
