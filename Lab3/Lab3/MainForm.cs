@@ -125,31 +125,32 @@ public partial class MainForm : Form
 
     private void LineByLineFillingButton_Click(object sender, EventArgs e)
     {
-        var emptyColor = _bitmap.GetPixel(1, 1);
-        var currentColor = _bitmap.GetPixel(_selectedPoint.X, _selectedPoint.Y);
-
         var segments = new List<(PointF start, PointF end)>();
-        for (int Y = 0; Y < _bitmap.Height; Y++)
+
+        for (var y = 0; y < _bitmap.Height; y++)
         {
             var startPoint = PointF.Empty;
 
-            for (int X = 0; X < _bitmap.Width; X++)
+            for (var x = 0; x < _bitmap.Width; x++)
             {
-                var thisColor = _bitmap.GetPixel(X, Y);
+                var thisColor = _bitmap.GetPixel(x, y);
 
-                if (thisColor != currentColor && thisColor != emptyColor)
+                if (thisColor.ToArgb() != Color.Black.ToArgb()) 
+                    continue;
+
+                if (startPoint == PointF.Empty)
                 {
-                    if (startPoint == PointF.Empty)
-                    {
-                        startPoint = new PointF(X + 1, Y);
-                    }
-                    else
-                    {
-                        var endPoint = new PointF(X - 1, Y);
-                        if (startPoint.X != X && startPoint.X != endPoint.X)
-                            segments.Add(new(startPoint, new PointF(X - 1, Y)));
-                        startPoint = new PointF(X + 1, Y);
-                    }
+                    if (!IsPointInPolygon(_originalPoints, x + 1, y))
+                        continue;
+
+                    startPoint = new PointF(x + 1, y);
+                    x++;
+                }
+                else
+                {
+                    var endPoint = new PointF(x - 1, y);
+                    segments.Add(new(startPoint, endPoint));
+                    startPoint = IsPointInPolygon(_originalPoints, x + 1, y) ? new PointF(x + 1, y) : PointF.Empty;
                 }
             }
         }
@@ -158,24 +159,25 @@ public partial class MainForm : Form
         var pen = new Pen(_fillColor);
         foreach (var segment in segments)
         {
-            var prevPixel = _bitmap.GetPixel((int)segment.start.X, (int)segment.start.Y - 1);
-            if ((prevPixel != currentColor && prevPixel != emptyColor) && SegmentIsNotEnd(segment.start))
-            {
-                g.DrawLine(pen, (int)segment.start.X, (int)segment.start.Y, segment.end.X, (int)segment.start.Y);
-            }
+            g.DrawLine(pen, (int)segment.start.X, (int)segment.start.Y, segment.end.X, (int)segment.start.Y);
 
             MainPictureBox.Refresh();
         }
     }
 
-    private bool SegmentIsNotEnd(PointF point)
+
+    private bool CheckNextLine(int y)
     {
         var emptyColor = _bitmap.GetPixel(1, 1);
-
-        for (int Y = (int)point.Y; Y < _bitmap.Height; Y++)
+        var currentColor = _bitmap.GetPixel(_selectedPoint.X, _selectedPoint.Y);
+        for (var x = 0; x < _bitmap.Width; x++)
         {
-            if (_bitmap.GetPixel((int)point.X, Y) != emptyColor)
+            var thisColor = _bitmap.GetPixel(x, y);
+
+            if (thisColor != currentColor && thisColor != emptyColor)
+            {
                 return true;
+            }
         }
 
         return false;
