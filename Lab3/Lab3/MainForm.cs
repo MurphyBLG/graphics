@@ -77,25 +77,6 @@ public partial class MainForm : Form
         _selectedPoint = new Point(e.X, e.Y);
     }
 
-    public bool IsPointInPolygon(List<Point> polygon, int x, int y)
-    {
-        var crossings = 0;
-        for (var i = 0; i < polygon.Count; i++)
-        {
-            var p1 = polygon[i];
-            var p2 = polygon[(i + 1) % polygon.Count];
-
-            if ((!(p1.Y <= y) || !(p2.Y > y)) && (!(p1.Y > y) || !(p2.Y <= y)))
-                continue;
-
-            var vt = (y - p1.Y) / (p2.Y - p1.Y);
-            if (x < p1.X + vt * (p2.X - p1.X))
-                crossings++;
-        }
-
-        return crossings % 2 == 1 && x >= 0 && x < MainPictureBox.Width && y >= 0 && y < MainPictureBox.Height;
-    }
-
     private void SeedFillingButton_Click(object sender, EventArgs e)
     {
         var targetColor = _bitmap.GetPixel(_selectedPoint.X, _selectedPoint.Y);
@@ -197,23 +178,5 @@ public partial class MainForm : Form
 
             MainPictureBox.Refresh();
         }
-    }
-
-
-    private bool CheckNextLine(int y)
-    {
-        var emptyColor = _bitmap.GetPixel(1, 1);
-        var currentColor = _bitmap.GetPixel(_selectedPoint.X, _selectedPoint.Y);
-        for (var x = 0; x < _bitmap.Width; x++)
-        {
-            var thisColor = _bitmap.GetPixel(x, y);
-
-            if (thisColor != currentColor && thisColor != emptyColor)
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
